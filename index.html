@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signals</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#0f172a;color:white}
+header{padding:15px;text-align:center;font-size:22px;font-weight:bold;background:#1e293b}
+.container{padding:10px}
+.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:10px;cursor:pointer}
+.card:hover{background:#334155}
+footer{position:fixed;bottom:0;width:100%;background:#1e293b;display:flex;justify-content:space-around;padding:10px 0}
+footer div{font-size:12px}
+.ad{background:#111;padding:10px;margin:10px 0;border-radius:8px;text-align:center}
+
+</style>
+
+</head>
+<body>
+
+<header>My Signals</header>
+
+<!-- ✅ TOP BANNER -->
+<div class="ad" id="topAd"></div>
+
+<div class="container" id="signals"></div>
+
+<!-- ✅ FLOATING AD -->
+<div class="floating-ad" id="floatingAd"></div>
+
+<footer>
+<div>Home</div>
+<div>Signals</div>
+<div>VIP</div>
+<div>About</div>
+<div>Contact</div>
+</footer>
+
+<script>
+
+// ✅ FUNCTION TO LOAD SCRIPT ADS (VERY IMPORTANT)
+function loadAd(containerId, adKey, width, height){
+  let container = document.getElementById(containerId);
+
+  let script1 = document.createElement('script');
+  script1.innerHTML = `
+    atOptions = {
+      'key' : '${adKey}',
+      'format' : 'iframe',
+      'height' : ${height},
+      'width' : ${width},
+      'params' : {}
+    };
+  `;
+
+  let script2 = document.createElement('script');
+  script2.src = `https://www.highperformanceformat.com/${adKey}/invoke.js`;
+
+  container.innerHTML = "";
+  container.appendChild(script1);
+  container.appendChild(script2);
+}
+
+
+// ✅ LOAD TOP BANNER
+loadAd("topAd","e2c16c7361085c6a9c4a3be123312563",728,90);
+
+
+// ✅ LOAD SIGNALS + INSERT SCRIPT ADS
+function loadSignals(){
+ let signals = JSON.parse(localStorage.getItem('signals')||'[]');
+ let container = document.getElementById('signals');
+ container.innerHTML='';
+
+ signals.reverse().forEach((s,i)=>{
+
+   // SIGNAL CARD
+   let div=document.createElement('div');
+   div.className='card';
+   div.innerHTML=`<b>${s.pair}</b><br>${s.type}`;
+
+   // CLICK → SHOW SCRIPT AD FIRST
+   div.onclick = () => {
+
+  // 1. OPEN AD IN NEW TAB
+  window.open("https://multilevelindustry-wq.github.io/NEOSTORE/Nigeria-Store.html", "_blank");
+
+  // 2. OVERLAY
+  let overlay = document.createElement('div');
+  overlay.style = `
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:9999;
+    color:white;
+    font-size:18px;
+    text-align:center;
+    padding:20px;
+  `;
+
+  let text = document.createElement('div');
+  text.innerText = "Ad opened in new tab...\nPlease wait while we prepare your signal";
+  overlay.appendChild(text);
+
+  let countdownText = document.createElement('div');
+  countdownText.style = "margin-top:10px;font-size:16px;";
+  overlay.appendChild(countdownText);
+
+  // ✅ BUTTON (HIDDEN INITIALLY)
+  let btn = document.createElement('button');
+  btn.innerText = "Continue to Signal";
+  btn.style = `
+    margin-top:20px;
+    padding:12px 20px;
+    background:#22c55e;
+    color:white;
+    border:none;
+    border-radius:8px;
+    display:none;
+    font-size:16px;
+  `;
+  overlay.appendChild(btn);
+
+  document.body.appendChild(overlay);
+
+  // 3. COUNTDOWN
+  let timeLeft = 10;
+  let finished = false;
+
+  countdownText.innerText = `Please wait (${timeLeft})`;
+
+  let interval = setInterval(() => {
+
+    timeLeft--;
+    countdownText.innerText = `Please wait (${timeLeft})`;
+
+    if (timeLeft <= 0 && !finished) {
+      finished = true;
+      clearInterval(interval);
+
+      countdownText.innerText = "Ready!";
+      btn.style.display = "block";
+    }
+
+  }, 1000);
+
+  // 4. BUTTON CLICK → GO TO SIGNAL
+  btn.onclick = () => {
+    document.body.removeChild(overlay);
+    localStorage.setItem('selectedSignal', JSON.stringify(s));
+    window.location.href = 'signalpage.html';
+  };
+
+};
+
+   container.appendChild(div);
+
+   // INSERT SCRIPT AD AFTER EVERY 2 SIGNALS
+   if((i+1)%2===0){
+     let adDiv=document.createElement('div');
+     adDiv.className="ad";
+
+     let adId="ad_"+i;
+     adDiv.id=adId;
+
+     container.appendChild(adDiv);
+
+     setTimeout(()=>{
+       loadAd(adId,"e2c16c7361085c6a9c4a3be123312563",300,250);
+     },100);
+   }
+
+ })
+}
+
+loadSignals();
+
+
+// ✅ HELPER FOR OVERLAY ADS
+function loadAdInto(container, key, width, height){
+  let script1 = document.createElement('script');
+  script1.innerHTML = `
+    atOptions = {
+      'key' : '${key}',
+      'format' : 'iframe',
+      'height' : ${height},
+      'width' : ${width},
+      'params' : {}
+    };
+  `;
+
+  let script2 = document.createElement('script');
+  script2.src = `https://www.highperformanceformat.com/${key}/invoke.js`;
+
+  container.appendChild(script1);
+  container.appendChild(script2);
+}
+
+
+// ✅ FLOATING AD ROTATION (MULTIPLE KEYS)
+const floatingAds = [
+  "e2c16c7361085c6a9c4a3be123312563",
+  "e2c16c7361085c6a9c4a3be123312563",
+  "e2c16c7361085c6a9c4a3be123312563"
+];
+
+let currentAd = 0;
+
+function rotateFloatingAd(){
+  loadAd("floatingAd", floatingAds[currentAd], 120, 120);
+  currentAd = (currentAd + 1) % floatingAds.length;
+}
+
+rotateFloatingAd();
+setInterval(rotateFloatingAd,5000);
+
+</script>
+
+</body>
+  </html>
