@@ -1,0 +1,36 @@
+<!-- ========================= ADMIN PAGE ========================= --><!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;padding:20px}
+input,button{width:100%;padding:10px;margin:5px 0;border:none;border-radius:6px}
+button{background:#22c55e;color:white;font-weight:bold}
+</style>
+</head>
+<body>
+<h2>Post Signal</h2>
+<input id="pair" placeholder="Pair (e.g EURUSD)">
+<input id="type" placeholder="Buy / Sell">
+<input id="sl" placeholder="Stop Loss (pips)">
+<input id="tp1" placeholder="TP1">
+<input id="tp2" placeholder="TP2">
+<input id="tp3" placeholder="TP3">
+<button onclick="saveSignal()">Post</button><script>
+function saveSignal(){
+ let signals = JSON.parse(localStorage.getItem('signals')||'[]');
+ let newSignal={
+   pair:pair.value,
+   type:type.value,
+   sl:sl.value,
+   tp1:tp1.value,
+   tp2:tp2.value,
+   tp3:tp3.value
+ };
+ signals.push(newSignal);
+ localStorage.setItem('signals',JSON.stringify(signals));
+ alert('Signal posted');
+}
+</script></body>
+</html>
